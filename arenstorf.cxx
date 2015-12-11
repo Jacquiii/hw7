@@ -4,29 +4,44 @@
 using namespace std; 
 
 // f(R)
-void f(double *f, const double*  const R, double r, double s, const double mu){
+//void f(double *f, const double*  const R, const double mu){
    
-  r=sqrt((R[0]+mu)*(R[0]+mu)+R[1]+R[1]);
-  s=sqrt((R[0]-1+mu)*(R[0]-1+mu)+R[1]+R[1]);
+  //double r;
+  //double s;
 
-  f[0]=R[2];
-  f[1]=R[3];
-  f[2]=R[0]+2*R[3]-((1-mu)*(R[0]+mu)/(r*r*r))-mu*(R[0]-1+mu)/(s*s*s);
-  f[3]=R[1]-2*R[2]-((1-mu)*(R[1])/(r*r*r))-mu*R[1]/(s*s*s);
-}
+  //r=sqrt((R[0]+mu)*(R[0]+mu)+R[1]+R[1]);
+  //s=sqrt((R[0]-1+mu)*(R[0]-1+mu)+R[1]+R[1]);
+
+  //f[0]=R[2];
+  //f[1]=R[3];
+  //f[2]=R[0]+2*R[3]-((1-mu)*(R[0]+mu)/(r*r*r))-mu*(R[0]-1+mu)/(s*s*s);
+  //f[3]=R[1]-2*R[2]-((1-mu)*(R[1])/(r*r*r))-mu*R[1]/(s*s*s);
+//}
    
- 
+void f(double *f, const double* const R, const double mu){
+  double x  = R[0];
+  double y  = R[1];
+  double xp = R[2];
+  double yp = R[3];
+  double r  = sqrt(pow(x+mu,2)+y*y);
+  double s  = sqrt(pow(x-1+mu,2)+y*y);
+
+  f[0] = xp;
+  f[1] = yp;
+  f[2] = x + 2*yp - (1-mu)*(x+mu) / pow(r,3) - mu*(x-1+mu) / pow(s,3);
+  f[3] = y - 2*xp - (1-mu)*y      / pow(r,3) - mu*y        / pow(s,3);
+}
 
 int main(){
 
-double dt=0.1;
-const double T= 20;
+double dt=0.001;
+const double T= 17.065216560157;
 //const int N= T/dt;
 double dtneu;
-double t;
+double t=0;
 
-double r;
-double s;
+//double r;
+//double s;
 
 const double mu=0.12277471;
 
@@ -55,7 +70,7 @@ double Rtemp[4];
 int i=0;
 while(T>t){
   i++;
-  
+ 
   t+=dt;
 
 
@@ -65,49 +80,49 @@ while(T>t){
   
   //if(t>T) break;
 
-  f(k1,R,r,s,mu);  
+  f(k1,R,mu);  
   
   Rtemp[0] = R[0] + dt/5. * k1[0];
   Rtemp[1] = R[1] + dt/5. * k1[1];
   Rtemp[2] = R[2] + dt/5. * k1[2];
   Rtemp[3] = R[3] + dt/5. * k1[3]; 
 
-  f(k2,Rtemp,r,s,mu); 
+  f(k2,Rtemp,mu); 
     
   Rtemp[0] = R[0] + dt * (3./40.*k1[0] + 9./40.*k2[0]);
   Rtemp[1] = R[1] + dt * (3./40.*k1[1] + 9./40.*k2[1]);
   Rtemp[2] = R[2] + dt * (3./40.*k1[2] + 9./40.*k2[2]);
   Rtemp[3] = R[3] + dt * (3./40.*k1[3] + 9./40.*k2[3]);
   
-  f(k3,Rtemp,r,s,mu); 
+  f(k3,Rtemp,mu); 
 
   Rtemp[0] = R[0] + dt * (44./45.*k1[0] - 56./15.*k2[0] + 32./9.*k3[0]);
   Rtemp[1] = R[1] + dt * (44./45.*k1[1] - 56./15.*k2[1] + 32./9.*k3[1]);
   Rtemp[2] = R[2] + dt * (44./45.*k1[2] - 56./15.*k2[2] + 32./9.*k3[2]);
   Rtemp[3] = R[3] + dt * (44./45.*k1[3] - 56./15.*k2[3] + 32./9.*k3[3]);
 
-  f(k4, Rtemp,r,s,mu); 
+  f(k4, Rtemp,mu); 
 
   Rtemp[0] = R[0] + dt * (19372./6561.*k1[0] - 25360./2187.*k2[0] + 64448./6561.*k3[0] - 212./729.*k4[0]);
   Rtemp[1] = R[1] + dt * (19372./6561.*k1[1] - 25360./2187.*k2[1] + 64448./6561.*k3[1] - 212./729.*k4[1]);
   Rtemp[2] = R[2] + dt * (19372./6561.*k1[2] - 25360./2187.*k2[2] + 64448./6561.*k3[2] - 212./729.*k4[2]);
   Rtemp[3] = R[3] + dt * (19372./6561.*k1[3] - 25360./2187.*k2[3] + 64448./6561.*k3[3] - 212./729.*k4[3]);
 
-  f(k5, Rtemp,r,s,mu);
+  f(k5, Rtemp,mu);
   
   Rtemp[0] = R[0] + dt * (9017./3168.*k1[0] - 355./33.*k2[0] + 46732./5247.*k3[0] + 49./176.*k4[0] - 5103./18656.*k5[0]);
   Rtemp[1] = R[1] + dt * (9017./3168.*k1[1] - 355./33.*k2[1] + 46732./5247.*k3[1] + 49./176.*k4[1] - 5103./18656.*k5[1]);
   Rtemp[2] = R[2] + dt * (9017./3168.*k1[2] - 355./33.*k2[2] + 46732./5247.*k3[2] + 49./176.*k4[2] - 5103./18656.*k5[2]);
   Rtemp[3] = R[3] + dt * (9017./3168.*k1[3] - 355./33.*k2[3] + 46732./5247.*k3[3] + 49./176.*k4[3] - 5103./18656.*k5[3]);
   
-  f(k6, Rtemp,r,s,mu);
+  f(k6, Rtemp,mu);
   
   Rtemp[0] = R[0] + dt * (35./384.*k1[0] + 500./113.*k3[0] + 125./192.*k4[0] - 2187./6784.*k5[0] + 11./84.*k6[0]);
   Rtemp[1] = R[1] + dt * (35./384.*k1[1] + 500./113.*k3[1] + 125./192.*k4[1] - 2187./6784.*k5[1] + 11./84.*k6[1]);
   Rtemp[2] = R[2] + dt * (35./384.*k1[2] + 500./113.*k3[2] + 125./192.*k4[2] - 2187./6784.*k5[2] + 11./84.*k6[2]);
   Rtemp[3] = R[3] + dt * (35./384.*k1[3] + 500./113.*k3[3] + 125./192.*k4[3] - 2187./6784.*k5[3] + 11./84.*k6[3]);
   
-  f(k7, Rtemp,r,s,mu);
+  f(k7, Rtemp,mu);
   
 
   //R in 5.Ordnung
@@ -136,12 +151,12 @@ while(T>t){
   Rmax=Rstep[0];
   
   for(int j=0; j<4; j++){
-    if(R[j]>Rmax)
+    if(Rstep[j]>Rmax)
       Rmax=R[j];
     else continue;
   }
 
-  dtneu=dt*(pow(10,-5)/Rmax);
+  dtneu=dt*pow((1e-5)/Rmax,1./5.);
   dt=dtneu;
   
   //Mit den Werten der 4. Ordnung sollen die neuen k-Vektoren bestimmt werden
@@ -150,8 +165,8 @@ while(T>t){
     R[k]=R4[k];
   }
 
+  cout << t <<'\t'<< R[0]<< "\t" << R[1] <<endl; 
    
-   cout << t <<'\t'<< R[0]<< "\t" << R[1] <<endl;
   
 }
 
