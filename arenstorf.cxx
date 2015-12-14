@@ -4,10 +4,10 @@
 using namespace std; 
 
 // f(R)
-void f(double *f, const double*  const R, double r, double s, const double mu){
+void f(double *f, const double*  const R,const double mu){
 
-  r=sqrt((R[0]+mu)*(R[0]+mu)+R[1]*R[1]);
-  s=sqrt((R[0]-1+mu)*(R[0]-1+mu)+R[1]*R[1]);
+ double r=sqrt((R[0]+mu)*(R[0]+mu)+R[1]*R[1]);
+ double s=sqrt((R[0]-1+mu)*(R[0]-1+mu)+R[1]*R[1]);
 
   f[0]=R[2];
   f[1]=R[3];
@@ -17,14 +17,12 @@ void f(double *f, const double*  const R, double r, double s, const double mu){
    
 int main(){
 
-double dt=0.001;
+double dt=0.0001;
 const double T= 17.065216560157;
 //const int N= T/dt;
 double dtneu;
 double t=0;
 
-double r;
-double s;
 
 const double mu=0.12277471;
 
@@ -63,49 +61,49 @@ while(T>t){
   
   //if(t>T) break;
 
-  f(k1,R,r,s,mu);  
+  f(k1,R,mu);  
   
   Rtemp[0] = R[0] + dt/5. * k1[0];
   Rtemp[1] = R[1] + dt/5. * k1[1];
   Rtemp[2] = R[2] + dt/5. * k1[2];
   Rtemp[3] = R[3] + dt/5. * k1[3]; 
 
-  f(k2,Rtemp,r,s,mu); 
+  f(k2,Rtemp,mu); 
     
   Rtemp[0] = R[0] + dt * (3./40.*k1[0] + 9./40.*k2[0]);
   Rtemp[1] = R[1] + dt * (3./40.*k1[1] + 9./40.*k2[1]);
   Rtemp[2] = R[2] + dt * (3./40.*k1[2] + 9./40.*k2[2]);
   Rtemp[3] = R[3] + dt * (3./40.*k1[3] + 9./40.*k2[3]);
   
-  f(k3,Rtemp,r,s,mu); 
+  f(k3,Rtemp,mu); 
 
   Rtemp[0] = R[0] + dt * (44./45.*k1[0] - 56./15.*k2[0] + 32./9.*k3[0]);
   Rtemp[1] = R[1] + dt * (44./45.*k1[1] - 56./15.*k2[1] + 32./9.*k3[1]);
   Rtemp[2] = R[2] + dt * (44./45.*k1[2] - 56./15.*k2[2] + 32./9.*k3[2]);
   Rtemp[3] = R[3] + dt * (44./45.*k1[3] - 56./15.*k2[3] + 32./9.*k3[3]);
 
-  f(k4,Rtemp,r,s,mu); 
+  f(k4,Rtemp,mu); 
 
   Rtemp[0] = R[0] + dt * (19372./6561.*k1[0] - 25360./2187.*k2[0] + 64448./6561.*k3[0] - 212./729.*k4[0]);
   Rtemp[1] = R[1] + dt * (19372./6561.*k1[1] - 25360./2187.*k2[1] + 64448./6561.*k3[1] - 212./729.*k4[1]);
   Rtemp[2] = R[2] + dt * (19372./6561.*k1[2] - 25360./2187.*k2[2] + 64448./6561.*k3[2] - 212./729.*k4[2]);
   Rtemp[3] = R[3] + dt * (19372./6561.*k1[3] - 25360./2187.*k2[3] + 64448./6561.*k3[3] - 212./729.*k4[3]);
 
-  f(k5,Rtemp,r,s,mu);
+  f(k5,Rtemp,mu);
   
   Rtemp[0] = R[0] + dt * (9017./3168.*k1[0] - 355./33.*k2[0] + 46732./5247.*k3[0] + 49./176.*k4[0] - 5103./18656.*k5[0]);
   Rtemp[1] = R[1] + dt * (9017./3168.*k1[1] - 355./33.*k2[1] + 46732./5247.*k3[1] + 49./176.*k4[1] - 5103./18656.*k5[1]);
   Rtemp[2] = R[2] + dt * (9017./3168.*k1[2] - 355./33.*k2[2] + 46732./5247.*k3[2] + 49./176.*k4[2] - 5103./18656.*k5[2]);
   Rtemp[3] = R[3] + dt * (9017./3168.*k1[3] - 355./33.*k2[3] + 46732./5247.*k3[3] + 49./176.*k4[3] - 5103./18656.*k5[3]);
   
-  f(k6,Rtemp,r,s,mu);
+  f(k6,Rtemp,mu);
   
   Rtemp[0] = R[0] + dt * (35./384.*k1[0] + 500./113.*k3[0] + 125./192.*k4[0] - 2187./6784.*k5[0] + 11./84.*k6[0]);
   Rtemp[1] = R[1] + dt * (35./384.*k1[1] + 500./113.*k3[1] + 125./192.*k4[1] - 2187./6784.*k5[1] + 11./84.*k6[1]);
   Rtemp[2] = R[2] + dt * (35./384.*k1[2] + 500./113.*k3[2] + 125./192.*k4[2] - 2187./6784.*k5[2] + 11./84.*k6[2]);
   Rtemp[3] = R[3] + dt * (35./384.*k1[3] + 500./113.*k3[3] + 125./192.*k4[3] - 2187./6784.*k5[3] + 11./84.*k6[3]);
   
-  f(k7,Rtemp,r,s,mu);
+  f(k7,Rtemp,mu);
   
 
   //R in 5.Ordnung
@@ -133,14 +131,13 @@ while(T>t){
   
   Rmax=Rstep[0];
   
-  for(int j=0; j<4; j++){
+  for(int j=1; j<4; j++){
     if(Rstep[j]>Rmax)
       Rmax=Rstep[j];
-      else continue;
     
   }
-
-  dtneu=dt*pow((1e-5/Rmax),1./5.);
+  
+  dtneu=dt*pow((1e-5/Rmax),1./5.)*0.8; //safety factor
   dt=dtneu;
   
   //Mit den Werten der 4. Ordnung sollen die neuen k-Vektoren bestimmt werden
@@ -149,7 +146,8 @@ while(T>t){
     R[k]=R4[k];
   }
 
-  cout << t <<'\t'<< R[0]<< "\t" << R[1] <<endl; 
+  cout<< R[0]<< "\t" << R[1] << "\t"<< t << '\t' << dt <<endl; 
+
    
   
 }
@@ -157,3 +155,4 @@ while(T>t){
 
  return 0;
 }
+
